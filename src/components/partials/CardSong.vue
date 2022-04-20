@@ -22,10 +22,9 @@
 
 
 <style scoped lang="scss">
-
     .card {
-        flex-basis: calc((100% / 5) - 20px);
-        margin: 0 10px 20px 10px;
+        flex-basis: calc((100% / 5) - 40px);
+        margin: 20px;
         padding: 20px;
         background-color: #2e3a46;
         display: flex;
@@ -50,5 +49,4 @@
             margin: 5px 0;
         }
     }
-
 </style>
