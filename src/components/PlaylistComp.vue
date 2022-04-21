@@ -1,11 +1,15 @@
 <template>
     <div class="container">
+        <div class="playlist">
 
-        <LoaderComp v-if="loading" />
+            <LoaderComp v-if="loading" />
 
-        <CardSong v-for="(element, index) in music" :key="index" :poster="element.poster" :title="element.title"
-            :author="element.author" :year="element.year" v-else />
-
+            <CardSong v-for="(element, index) in filteredGenre" :key="index" :poster="element.poster" :title="element.title"
+                :author="element.author" :year="element.year" v-else />
+        </div>
+        <div class="selectFilter">
+            <SelectGenre @selectGenre="chooseGenre" v-if="!loading"/>
+        </div>
     </div>
 </template>
 
@@ -13,6 +17,7 @@
     import axios from 'axios';
     import CardSong from './partials/CardSong.vue';
     import LoaderComp from './partials/LoaderComp.vue'
+    import SelectGenre from './partials/SelectGenre.vue'
 
 
     export default {
@@ -21,6 +26,8 @@
         components: {
             CardSong,
             LoaderComp,
+            SelectGenre,
+
         },
 
         data() {
@@ -28,6 +35,7 @@
                 // modificare il nome dell'array
                 music: [],
                 loading: false,
+                selectedGenre: "",
             }
         },
 
@@ -41,7 +49,6 @@
                 .then((res) => {
 
                     this.music = res.data.response
-                    console.log(this.music)
                 })
 
                 .catch((error) => {
@@ -52,8 +59,24 @@
 
         },
 
-        methods: {
+        computed: {
+            filteredGenre() {
+                if (this.selectedGenre == "") {
+                    return this.music
+                }
 
+                return this.music.filter((element) => {
+                    return element.genre
+                        .toLowerCase()
+                        .includes(this.selectedGenre.toLowerCase())
+                })
+            }
+        },
+
+        methods: {
+            chooseGenre(genre) {
+                this.selectedGenre = genre
+            }
         }
 
     }
@@ -62,11 +85,27 @@
 
 <style scoped lang="scss">
     .container {
-        width: 75%;
         height: 100%;
-        overflow-y: auto;
+        width: 100%;
         display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
+        
+        .playlist {
+            width: 75%;
+            height: 100%;
+            overflow-y: auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .selectFilter {
+            width: 25%;
+            display: flex;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+        }
     }
+
 </style>

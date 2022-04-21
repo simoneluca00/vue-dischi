@@ -5,8 +5,10 @@
 </template>
 
 <script>
+
   export default {
     name: 'HeaderComp',
+
 
   }
 </script>
@@ -16,12 +18,12 @@
   header {
     background-color: #2e3a46;
     height: 10vh;
+    padding: 0 30px;
     display: flex;
     align-items: center;
 
     img {
       height: 70%;
-      margin-left: 30px;
     }
   }
 </style>

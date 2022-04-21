@@ -32,6 +32,7 @@
         align-items: center;
         justify-content: center;
         text-align: center;
+        height: 335px;
 
         img {
             width: 130px;
