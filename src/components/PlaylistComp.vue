@@ -2,13 +2,17 @@
     <div class="container">
         <div class="playlist">
 
+            <h2 class="noResults" v-if="filterList.length == 0">Prova a cercare qualcos'altro...</h2>
+
             <LoaderComp v-if="loading" />
 
-            <CardSong v-for="(element, index) in filteredGenre" :key="index" :poster="element.poster" :title="element.title"
-                :author="element.author" :year="element.year" v-else />
+            <!-- come combinare i due array filtrati (genere e artista?) -->
+            <CardSong v-for="(element, index) in filterList" :key="index" :poster="element.poster"
+                :title="element.title" :author="element.author" :year="element.year" v-else />
         </div>
         <div class="selectFilter">
-            <SelectGenre @selectGenre="chooseGenre" v-if="!loading"/>
+            <SelectGenre @selectGenre="chooseGenre" v-if="!loading" />
+            <SelectArtist @selectArtist="chooseArtist" v-if="!loading" />
         </div>
     </div>
 </template>
@@ -18,6 +22,7 @@
     import CardSong from './partials/CardSong.vue';
     import LoaderComp from './partials/LoaderComp.vue'
     import SelectGenre from './partials/SelectGenre.vue'
+    import SelectArtist from './partials/SelectArtist.vue'
 
 
     export default {
@@ -27,6 +32,7 @@
             CardSong,
             LoaderComp,
             SelectGenre,
+            SelectArtist
 
         },
 
@@ -36,6 +42,7 @@
                 music: [],
                 loading: false,
                 selectedGenre: "",
+                selectedArtist: "",
             }
         },
 
@@ -60,22 +67,35 @@
         },
 
         computed: {
-            filteredGenre() {
-                if (this.selectedGenre == "") {
+            filterList() {
+                if (this.selectedGenre == "" && this.selectedArtist == "") {
                     return this.music
                 }
 
-                return this.music.filter((element) => {
-                    return element.genre
-                        .toLowerCase()
-                        .includes(this.selectedGenre.toLowerCase())
-                })
-            }
+                return this.music
+                    .filter((element) => {
+                        return element.genre
+                            .toLowerCase()
+                            .includes(this.selectedGenre.toLowerCase())
+
+
+                    })
+                    .filter((element) => {
+                        return element.author
+                            .toLowerCase()
+                            .includes(this.selectedArtist.toLowerCase())
+                    })
+            },
+
         },
 
         methods: {
             chooseGenre(genre) {
                 this.selectedGenre = genre
+            },
+
+            chooseArtist(text) {
+                this.selectedArtist = text
             }
         }
 
@@ -88,24 +108,31 @@
         height: 100%;
         width: 100%;
         display: flex;
-        
+        justify-content: center;
+
         .playlist {
-            width: 75%;
+            width: 80%;
             height: 100%;
             overflow-y: auto;
             display: flex;
-            justify-content: flex-start;
+            justify-content: center;
             align-items: flex-start;
             flex-wrap: wrap;
+
+            .noResults {
+                color: #fff;
+                align-self: center;
+            }
         }
 
         .selectFilter {
-            width: 25%;
-            display: flex;
+            width: 20%;
             height: 100%;
-            justify-content: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
             align-items: center;
+            border-left: 1px solid #2e3a46
         }
     }
-
 </style>
